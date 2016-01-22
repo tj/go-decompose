@@ -1,0 +1,29 @@
+{
+  "/pets": {
+    "get": {
+      "summary": "finds pets in the system",
+      "responses": {
+        "200": {
+          "description": "pet response",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Pet"
+            }
+          },
+          "headers": {
+            "x-expires": {
+              "type": "string"
+            }
+          }
+        },
+        "default": {
+          "description": "unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    }
+  }
+}
