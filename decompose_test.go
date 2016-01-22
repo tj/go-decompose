@@ -74,14 +74,56 @@ var result = `{
   }
 }`
 
-func TestDecompose(t *testing.T) {
+var pathsResult = `{
+  "/pets": {
+    "get": {
+      "summary": "finds pets in the system",
+      "responses": {
+        "200": {
+          "description": "pet response",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Pet"
+            }
+          },
+          "headers": {
+            "x-expires": {
+              "type": "string"
+            }
+          }
+        },
+        "default": {
+          "description": "unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    }
+  }
+}`
+
+func TestDecompose_directory(t *testing.T) {
 	b, err := Decompose("_fixtures/gateway")
 
 	if err != nil {
-		t.Fatalf("error: %s", err)
+		t.Fatal(err)
 	}
 
 	if string(b) != result {
+		t.Fatalf("got: `%s`", b)
+	}
+}
+
+func TestDecompose_singleFile(t *testing.T) {
+	b, err := Decompose("_fixtures/gateway/paths.json")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if string(b) != pathsResult {
 		t.Fatalf("got: `%s`", b)
 	}
 }

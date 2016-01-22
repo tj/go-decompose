@@ -3,19 +3,29 @@ package decompose
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-// Decompose starting at `root` path, returning a JSON blob.
+// Decompose starting at `root` path, returning a JSON blob. If `root` is a JSON file itself
+// and not a directory, its contents is simply returned.
 func Decompose(root string) ([]byte, error) {
 	m := make(map[string]interface{})
 
 	// TODO: actually support arbitrary depths :)
-	// TODO: yaml support would be nice as well
 
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	info, err := os.Stat(root)
+	if err != nil {
+		return nil, err
+	}
+
+	if info.Mode().IsRegular() {
+		return ioutil.ReadFile(root)
+	}
+
+	err = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
