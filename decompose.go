@@ -29,6 +29,10 @@ func Decompose(root string) ([]byte, error) {
 			return nil
 		}
 
+		if !strings.HasSuffix(path, ".json") {
+			return nil
+		}
+
 		f, err := os.Open(path)
 		if err != nil {
 			return err
